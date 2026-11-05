@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AttemptMode {
+  PRACTICE
+  SIMULATION
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  EXPIRED
+}
+
+enum QuestionSource {
+  STARTER
+  GENERATED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  targetExamId String? // exam the user is preparing for (see src/lib/exams.ts)
+  examDate     DateTime? @db.Date
+  institution  String? // training provider / school, used to pick video material
+  createdAt    DateTime  @default(now())
+
+  attempts Attempt[]
+}
+
+model Question {
+  id           String         @id @default(cuid())
+  examId       String
+  domainId     String
+  topic        String
+  difficulty   String // easy | medium | hard
+  stem         String
+  options      Json // { A, B, C, D }
+  answer       String // "A" | "B" | "C" | "D"
+  explanations Json // { A, B, C, D }: why each option is right or wrong
+  source       QuestionSource @default(GENERATED)
+  model        String? // model that wrote it, for generated questions
+  contentHash  String         @unique // dedupe: same stem + options never stored twice
+  active       Boolean        @default(true)
+  reports      Int            @default(0) // "this question looks wrong" reports from users
+  createdAt    DateTime       @default(now())
+
+  items AttemptItem[]
+
+  @@index([examId, domainId, active])
+}
+
+model Attempt {
+  id            String        @id @default(cuid())
+  userId        String
+  examId        String
+  mode          AttemptMode
+  domainIds     String[] // empty = all domains
+  questionCount Int
+  timeLimitSec  Int? // simulations only
+  status        AttemptStatus @default(IN_PROGRESS)
+  startedAt     DateTime      @default(now())
+  expiresAt     DateTime? // server-side deadline for simulations
+  submittedAt   DateTime?
+  correctCount  Int?
+  scorePercent  Float?
+  passed        Boolean?
+
+  user  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items AttemptItem[]
+
+  @@index([userId, examId, startedAt])
+}
+
+model AttemptItem {
+  id         String    @id @default(cuid())
+  attemptId  String
+  questionId String
+  position   Int
+  optionOrder String  @default("ABCD") // shuffled per attempt: displayed A-D -> original keys
+  selected   String? // original option key, null if unanswered
+  flagged    Boolean   @default(false)
+  isCorrect  Boolean?
+  answeredAt DateTime?
+
+  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([attemptId, position])
+  @@index([questionId])
+}
+
+/// Failed sign-in / sign-up counters for brute-force protection.
+model AuthThrottle {
+  key         String    @id
+  failures    Int       @default(0)
+  windowStart DateTime  @default(now())
+  lockedUntil DateTime?
+}
