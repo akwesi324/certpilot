@@ -44,3 +44,7 @@ next-env.d.ts
 # editor / tooling notes
 AGENTS.md
 CLAUDE.md
+
+# android build output
+/android/build/
+/android/dist/
