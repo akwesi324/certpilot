@@ -9,6 +9,7 @@ export type Domain = {
   name: string;
   weight: number; // percent of the exam
   topics: string[];
+  videoUrl?: string; // YouTube playlist or video for this domain
 };
 
 export type Exam = {
@@ -183,4 +184,35 @@ export function questionsPerDomain(exam: Exam, total: number, domainIds?: string
     left -= 1;
   }
   return counts;
+}
+
+// ---------------------------------------------------------------- video lessons
+
+export type VideoLink = { title: string; url: string; source: string };
+
+/** Free full-length courses (checked links). Exams without one fall back to per-domain searches. */
+const COURSES: Record<string, VideoLink> = {
+  secplus: {
+    title: "Professor Messer SY0-701 Security+ course (free)",
+    url: "https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/",
+    source: "Professor Messer",
+  },
+};
+
+const youtube = (q: string) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+
+/** Free video lessons for a domain: a course (if the exam has one) and a focused video search. */
+export function domainVideos(exam: Exam, domain: Domain, institution?: string | null): VideoLink[] {
+  const links: VideoLink[] = [];
+  const course = COURSES[exam.id];
+  if (course) links.push(course);
+  links.push({ title: `${domain.name}: ${exam.code} lessons`, url: youtube(`${exam.name} ${exam.code} ${domain.name}`), source: "YouTube" });
+  if (institution) links.push({ title: `${institution}: ${domain.name}`, url: youtube(`${institution} ${exam.name} ${domain.name}`), source: institution });
+  return links;
+}
+
+/** The single best link for a domain (used next to answers and domain bars). */
+export function primaryVideo(exam: Exam, domain: Domain, topic?: string): VideoLink {
+  const q = topic ? `${exam.name} ${exam.code} ${topic}` : `${exam.name} ${exam.code} ${domain.name}`;
+  return { title: topic ? `Watch: ${topic}` : `Watch: ${domain.name}`, url: youtube(q), source: "YouTube" };
 }

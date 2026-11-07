@@ -3,7 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import DomainBar from "@/components/DomainBar";
 import ReviewList from "@/components/ReviewList";
 import { EngineError, getResults } from "@/lib/engine";
-import { getExam } from "@/lib/exams";
+import { domainVideos, getExam } from "@/lib/exams";
+import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
 import { btnPrimary, btnSecondary, card } from "@/lib/ui";
 
@@ -21,6 +22,8 @@ export default async function ResultsPage({ params }: PageProps<"/test/[id]/resu
     throw e;
   }
   const exam = getExam(r.examId);
+  const { institution } = await prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { institution: true } });
+  const weak = r.byDomain.filter((d) => (d.percent ?? 0) < r.passMark).sort((a, b) => (a.percent ?? 0) - (b.percent ?? 0));
   const minutes = r.submittedAt ? Math.round((new Date(r.submittedAt).getTime() - new Date(r.startedAt).getTime()) / 60000) : null;
 
   return (
@@ -58,6 +61,31 @@ export default async function ResultsPage({ params }: PageProps<"/test/[id]/resu
           </p>
         )}
       </section>
+
+      {exam && weak.length > 0 && (
+        <section className={`${card} space-y-4`}>
+          <div>
+            <h2 className="font-semibold text-slate-900 dark:text-white">Lessons for your weak domains</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Free video material for the domains below {r.passMark}%.</p>
+          </div>
+          {weak.map((d) => {
+            const domain = exam.domains.find((x) => x.id === d.domainId)!;
+            return (
+              <div key={d.domainId}>
+                <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{d.name} <span className="text-slate-500">({d.percent}%)</span></p>
+                <ul className="mt-1 space-y-0.5 text-sm">
+                  {domainVideos(exam, domain, institution).map((v) => (
+                    <li key={v.url}>
+                      <a href={v.url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline dark:text-indigo-400">{v.title}</a>
+                      <span className="text-slate-400"> &middot; {v.source}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </section>
+      )}
 
       <ReviewList items={r.items} domainNames={Object.fromEntries((exam?.domains ?? []).map((d) => [d.id, d.name]))} />
     </div>

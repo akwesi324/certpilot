@@ -4,7 +4,7 @@ import DomainBar from "@/components/DomainBar";
 import StartPanel from "@/components/StartPanel";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
-import { getExam, PASS_MARK } from "@/lib/exams";
+import { getExam, PASS_MARK, primaryVideo } from "@/lib/exams";
 import { questionCounts, readiness } from "@/lib/engine";
 import { card } from "@/lib/ui";
 
@@ -65,10 +65,10 @@ export default async function DashboardPage() {
         <section className={`${card} space-y-4 lg:col-span-3`}>
           <div>
             <h2 className="font-semibold text-slate-900 dark:text-white">Readiness by domain</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Based on your recent answers. The line marks the {PASS_MARK}% pass mark.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Based on your recent answers. The line marks the {PASS_MARK}% pass mark. Click a domain to watch lessons.</p>
           </div>
           {ready.map((d) => (
-            <DomainBar key={d.domainId} name={`${d.name} (${d.weight}%)`} percent={d.percent} detail={d.answered ? `${d.answered} answered` : undefined} />
+            <DomainBar key={d.domainId} name={`${d.name} (${d.weight}%)`} percent={d.percent} detail={d.answered ? `${d.answered} answered` : undefined} href={primaryVideo(exam, exam.domains.find((x) => x.id === d.domainId)!).url} />
           ))}
         </section>
         <section className="space-y-4 lg:col-span-2">

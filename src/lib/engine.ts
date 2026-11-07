@@ -178,6 +178,7 @@ export async function getAttemptView(userId: string, attemptId: string) {
       return {
         position: i.position,
         domainId: i.question.domainId,
+        topic: i.question.topic,
         stem: i.question.stem,
         options: d.options,
         selected: d.selected,

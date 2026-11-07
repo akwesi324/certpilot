@@ -11,6 +11,7 @@ const CHOICES: Choice[] = ["A", "B", "C", "D"];
 export type RunnerItem = {
   position: number;
   domainId: string;
+  topic: string;
   stem: string;
   options: Record<Choice, string>;
   selected: Choice | null;
@@ -28,6 +29,7 @@ type Props = {
   serverNow: string;
   items: RunnerItem[];
   domainNames: Record<string, string>;
+  examLabel: string;
 };
 
 function formatClock(ms: number) {
@@ -38,7 +40,7 @@ function formatClock(ms: number) {
   return `${h ? `${h}:` : ""}${String(m).padStart(h ? 2 : 1, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
-export default function TestRunner({ attemptId, examName, mode, expiresAt, serverNow, items: initial, domainNames }: Props) {
+export default function TestRunner({ attemptId, examName, mode, expiresAt, serverNow, items: initial, domainNames, examLabel }: Props) {
   const router = useRouter();
   const [items, setItems] = useState(initial);
   const [current, setCurrent] = useState(() => Math.max(0, initial.findIndex((i) => !i.selected)));
@@ -198,6 +200,14 @@ export default function TestRunner({ attemptId, examName, mode, expiresAt, serve
                   </li>
                 ))}
               </ul>
+              <a
+                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${examLabel} ${item.topic}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-block font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+              >
+                Watch a lesson: {item.topic} &rarr;
+              </a>
             </div>
           )}
 

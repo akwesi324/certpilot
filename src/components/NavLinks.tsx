@@ -9,11 +9,12 @@ const LINKS = [
   { href: "/history", label: "History" },
 ];
 
-export default function NavLinks() {
+export default function NavLinks({ admin = false }: { admin?: boolean }) {
   const pathname = usePathname();
+  const links = admin ? [...LINKS, { href: "/admin/generate", label: "Question bank" }] : LINKS;
   return (
     <nav className="flex items-center gap-1">
-      {LINKS.map((l) => {
+      {links.map((l) => {
         const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
         return (
           <Link

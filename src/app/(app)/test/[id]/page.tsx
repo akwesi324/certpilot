@@ -24,6 +24,7 @@ export default async function TestPage({ params }: PageProps<"/test/[id]">) {
       expiresAt={view.expiresAt}
       serverNow={view.serverNow}
       items={view.items}
+      examLabel={exam ? `${exam.name} ${exam.code}` : view.examId}
       domainNames={Object.fromEntries((exam?.domains ?? []).map((d) => [d.id, d.name]))}
     />
   );

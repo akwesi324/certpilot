@@ -5,6 +5,7 @@ import Logo from "@/components/Logo";
 import NavLinks from "@/components/NavLinks";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
+import { isAdmin } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           <Link href="/dashboard" aria-label="Dashboard">
             <Logo />
           </Link>
-          <NavLinks />
+          <NavLinks admin={await isAdmin(userId)} />
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden text-sm text-slate-500 sm:inline dark:text-slate-400">{user.name}</span>
             <form action={logout}>
