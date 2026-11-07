@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
-import { EXAMS } from "@/lib/exams";
+import { CATEGORY, examsByVendor } from "@/lib/exams";
 import SetupForm from "@/components/SetupForm";
 
 export default async function SetupPage() {
@@ -15,7 +15,12 @@ export default async function SetupPage() {
         </p>
       </div>
       <SetupForm
-        exams={EXAMS.map((e) => ({ id: e.id, name: e.name, code: e.code, vendor: e.vendor, questions: e.format.questions, minutes: e.format.minutes }))}
+        category={CATEGORY}
+        groups={examsByVendor().map(({ vendor, exams }) => ({
+          vendor: vendor.name,
+          about: vendor.about,
+          exams: exams.map((e) => ({ id: e.id, name: e.name, code: e.code, questions: e.format.questions, minutes: e.format.minutes })),
+        }))}
         current={{ examId: user.targetExamId ?? "", examDate: user.examDate?.toISOString().slice(0, 10) ?? "", institution: user.institution ?? "" }}
       />
     </div>

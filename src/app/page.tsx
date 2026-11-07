@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import Footer from "@/components/Footer";
 import Logo from "@/components/Logo";
-import { EXAMS, PASS_MARK } from "@/lib/exams";
+import { CATEGORY, EXAMS, PASS_MARK, examsByVendor } from "@/lib/exams";
 import { btnPrimary, btnSecondary, card } from "@/lib/ui";
 
 export const dynamic = "force-dynamic";
@@ -50,12 +50,15 @@ export default async function Home() {
           ))}
         </section>
         <section className="py-12">
-          <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Exams covered</h2>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            {EXAMS.map((e) => (
-              <span key={e.id} className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
-                {e.name} <span className="text-slate-400">{e.code}</span>
-              </span>
+          <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            {CATEGORY} exams covered &middot; {EXAMS.length}
+          </h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {examsByVendor().map(({ vendor, exams }) => (
+              <div key={vendor.name} className={card}>
+                <h3 className="font-semibold text-slate-900 dark:text-white">{vendor.fullName}</h3>
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{exams.map((e) => e.code).join(" · ")}</p>
+              </div>
             ))}
           </div>
         </section>

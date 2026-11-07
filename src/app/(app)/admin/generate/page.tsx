@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import GenerateForm from "@/components/GenerateForm";
 import { isAdmin } from "@/lib/admin";
 import { DOMAIN_CAP, MAX_PER_REQUEST } from "@/lib/generate";
-import { EXAMS } from "@/lib/exams";
+import { examsByVendor } from "@/lib/exams";
 import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/session";
 
@@ -22,9 +22,9 @@ export default async function GeneratePage() {
       <GenerateForm
         configured={Boolean(process.env.ANTHROPIC_API_KEY)}
         maxPerRequest={MAX_PER_REQUEST}
-        exams={EXAMS.map((e) => ({
+        exams={examsByVendor().flatMap(({ exams }) => exams).map((e) => ({
           id: e.id,
-          name: `${e.name} (${e.code})`,
+          name: `${e.name.startsWith(e.vendor) ? e.name : `${e.vendor} ${e.name}`} (${e.code})`,
           domains: e.domains.map((d) => ({ id: d.id, name: d.name, topics: d.topics, count: counts.find((c) => c.domainId === d.id)?._count._all ?? 0 })),
         }))}
       />

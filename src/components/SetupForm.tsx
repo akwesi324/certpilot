@@ -5,29 +5,86 @@ import { saveSetup } from "@/app/actions/study";
 import type { FormState } from "@/app/actions/auth";
 import { btnPrimary, card, input, label } from "@/lib/ui";
 
-type ExamOption = { id: string; name: string; code: string; vendor: string; questions: number; minutes: number };
+type ExamOption = { id: string; name: string; code: string; questions: number; minutes: number };
+export type ExamGroup = { vendor: string; about: string; exams: ExamOption[] };
 
-export default function SetupForm({ exams, current }: { exams: ExamOption[]; current: { examId: string; examDate: string; institution: string } }) {
+export default function SetupForm({
+  category,
+  groups,
+  current,
+}: {
+  category: string;
+  groups: ExamGroup[];
+  current: { examId: string; examDate: string; institution: string };
+}) {
   const [state, action, pending] = useActionState<FormState, FormData>(saveSetup, undefined);
   const [examId, setExamId] = useState(current.examId);
+  const [query, setQuery] = useState("");
+  const q = query.trim().toLowerCase();
+  const visible = groups
+    .map((g) => ({
+      ...g,
+      exams: q ? g.exams.filter((e) => `${g.vendor} ${e.name} ${e.code}`.toLowerCase().includes(q)) : g.exams,
+    }))
+    .filter((g) => g.exams.length > 0);
+  // The group holding the saved exam starts open (or the first group if none is saved yet).
+  const initialGroup = groups.find((g) => g.exams.some((e) => e.id === current.examId))?.vendor ?? groups[0]?.vendor;
+  const selected = groups.flatMap((g) => g.exams.map((e) => ({ ...e, vendor: g.vendor }))).find((e) => e.id === examId);
+
   return (
     <form action={action} className="space-y-6">
-      <fieldset className="grid gap-3 sm:grid-cols-2">
-        <legend className="sr-only">Exam</legend>
-        {exams.map((e) => (
-          <label
-            key={e.id}
-            className={`${card} cursor-pointer transition ${examId === e.id ? "border-indigo-500 ring-2 ring-indigo-500/30 dark:border-indigo-400" : "hover:border-slate-300 dark:hover:border-slate-700"}`}
+      <fieldset className="space-y-3">
+        <legend className="mb-2 flex w-full flex-wrap items-center justify-between gap-2">
+          <span className="text-lg font-semibold text-slate-900 dark:text-white">{category}</span>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search exams, e.g. CISM or SC-200"
+            aria-label="Search exams"
+            className={`${input} sm:max-w-xs`}
+          />
+        </legend>
+        {selected && (
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Selected: <span className="font-medium text-slate-900 dark:text-white">{selected.name.startsWith(selected.vendor) ? selected.name : `${selected.vendor} ${selected.name}`}</span> ({selected.code})
+          </p>
+        )}
+        {visible.length === 0 && <p className="text-sm text-slate-500 dark:text-slate-400">No exams match &ldquo;{query}&rdquo;.</p>}
+        {visible.map((g) => (
+          <details
+            key={g.vendor}
+            open={Boolean(q) || g.vendor === initialGroup}
+            className="group rounded-xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40"
           >
-            <input type="radio" name="examId" value={e.id} checked={examId === e.id} onChange={() => setExamId(e.id)} className="sr-only" />
-            <span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{e.vendor}</span>
-            <span className="mt-1 block font-semibold text-slate-900 dark:text-white">{e.name}</span>
-            <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">
-              {e.code} &middot; {e.questions} questions &middot; {e.minutes} min
-            </span>
-          </label>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
+              <span>
+                <span className="font-semibold text-slate-900 dark:text-white">{g.vendor}</span>
+                <span className="ml-2 text-sm text-slate-500 dark:text-slate-400">{g.exams.length} exams</span>
+                <span className="block text-xs text-slate-500 dark:text-slate-400">{g.about}</span>
+              </span>
+              <span aria-hidden className="text-slate-400 transition group-open:rotate-90">&#9656;</span>
+            </summary>
+            <div className="grid gap-3 px-4 pb-4 sm:grid-cols-2">
+              {g.exams.map((e) => (
+                <label
+                  key={e.id}
+                  className={`${card} cursor-pointer transition ${examId === e.id ? "border-indigo-500 ring-2 ring-indigo-500/30 dark:border-indigo-400" : "hover:border-slate-300 dark:hover:border-slate-700"}`}
+                >
+                  <input type="radio" name="examId" value={e.id} checked={examId === e.id} onChange={() => setExamId(e.id)} className="sr-only" />
+                  <span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{e.code}</span>
+                  <span className="mt-1 block font-semibold text-slate-900 dark:text-white">{e.name}</span>
+                  <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">
+                    {e.questions} questions &middot; {e.minutes} min
+                  </span>
+                </label>
+              ))}
+            </div>
+          </details>
         ))}
       </fieldset>
+      {/* Keeps the choice submitted even when its group is filtered out by the search. */}
+      {examId && !visible.some((g) => g.exams.some((e) => e.id === examId)) && <input type="hidden" name="examId" value={examId} />}
       <div className={`${card} grid gap-4 sm:grid-cols-2`}>
         <label className="block space-y-1">
           <span className={label}>Exam date (optional)</span>
