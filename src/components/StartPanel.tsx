@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { startTest } from "@/app/actions/study";
 import type { FormState } from "@/app/actions/auth";
 import { btnPrimary, btnSecondary, card, input, label } from "@/lib/ui";
@@ -25,35 +26,74 @@ export default function StartPanel({ exam, domains }: Props) {
         <input type="hidden" name="mode" value="PRACTICE" />
         <div>
           <h2 className="font-semibold text-slate-900 dark:text-white">Practice</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Untimed. You see the answer and an explanation for every option straight after each question.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Untimed. You see the answer and an explanation for every option straight after each question.
+          </p>
         </div>
-        <details className="text-sm">
-          <summary className="cursor-pointer font-medium text-slate-700 dark:text-slate-300">Focus on domains {picked.length ? `(${picked.length} selected)` : "(all)"}</summary>
-          <div className="mt-2 space-y-1.5">
-            {domains.map((d) => (
-              <label key={d.id} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
-                <input
-                  type="checkbox"
-                  name="domainIds"
-                  value={d.id}
-                  checked={picked.includes(d.id)}
-                  onChange={(e) => setPicked((p) => (e.target.checked ? [...p, d.id] : p.filter((x) => x !== d.id)))}
-                  className="mt-0.5"
-                />
-                <span>{d.name} <span className="text-slate-400">({d.available})</span></span>
-              </label>
-            ))}
+
+        {total === 0 ? (
+          <div className="rounded-lg bg-amber-50 p-3 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
+            <p className="font-semibold">Question bank in progress</p>
+            <p className="mt-1">
+              There are no practice questions for this exam yet. You can practise with{" "}
+              <Link href="/exams/secplus" className="font-semibold underline">
+                CompTIA Security+
+              </Link>{" "}
+              or other active exams.
+            </p>
           </div>
-        </details>
-        <label className="block space-y-1">
-          <span className={label}>Questions</span>
-          <select name="count" defaultValue="20" className={input}>
-            {[10, 20, 30, 50].map((n) => <option key={n} value={n}>{n}{n > pool ? ` (only ${pool} available)` : ""}</option>)}
-          </select>
-        </label>
+        ) : (
+          <>
+            <details className="text-sm">
+              <summary className="cursor-pointer font-medium text-slate-700 dark:text-slate-300">
+                Focus on domains {picked.length ? `(${picked.length} selected)` : "(all)"}
+              </summary>
+              <div className="mt-2 space-y-1.5">
+                {domains.map((d) => (
+                  <label key={d.id} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      name="domainIds"
+                      value={d.id}
+                      checked={picked.includes(d.id)}
+                      onChange={(e) => setPicked((p) => (e.target.checked ? [...p, d.id] : p.filter((x) => x !== d.id)))}
+                      className="mt-0.5"
+                    />
+                    <span>
+                      {d.name} <span className="text-slate-400">({d.available})</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </details>
+
+            {pool === 0 && picked.length > 0 && (
+              <p className="text-xs text-amber-600 dark:text-amber-400">
+                The selected domain(s) have no questions. Uncheck or choose other domains to practise.
+              </p>
+            )}
+
+            <label className="block space-y-1">
+              <span className={label}>Questions</span>
+              <select name="count" defaultValue={Math.min(20, Math.max(5, pool))} className={input}>
+                {[10, 20, 30, 50].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                    {n > pool ? ` (only ${pool} available)` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
+
         {practiceState?.error && <p className="text-sm text-rose-600 dark:text-rose-400">{practiceState.error}</p>}
-        <button type="submit" disabled={practicePending || pool === 0} className={`${btnPrimary} w-full`}>
-          {practicePending ? "Preparing..." : "Start practice"}
+        <button
+          type="submit"
+          disabled={practicePending || pool === 0}
+          className={`${btnPrimary} w-full`}
+        >
+          {practicePending ? "Preparing..." : pool === 0 ? "No questions available" : "Start practice"}
         </button>
       </form>
 
@@ -67,15 +107,25 @@ export default function StartPanel({ exam, domains }: Props) {
             the timer cannot be paused. Pass mark 80%.
           </p>
           {exam.note && <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{exam.note}</p>}
-          {shortSim && total > 0 && (
+          {total === 0 ? (
             <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
-              The question bank has {total} questions so far, so the simulation will be shortened to {total} with the time scaled to match.
+              No simulation questions are currently available for this exam.
             </p>
+          ) : (
+            shortSim && (
+              <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
+                The question bank has {total} questions so far, so the simulation will be shortened to {total} with the time scaled to match.
+              </p>
+            )
           )}
         </div>
         {simState?.error && <p className="text-sm text-rose-600 dark:text-rose-400">{simState.error}</p>}
-        <button type="submit" disabled={simPending || total === 0} className={`${btnSecondary} w-full`}>
-          {simPending ? "Preparing..." : "Start simulation"}
+        <button
+          type="submit"
+          disabled={simPending || total === 0}
+          className={`${btnSecondary} w-full`}
+        >
+          {simPending ? "Preparing..." : total === 0 ? "No questions available" : "Start simulation"}
         </button>
       </form>
     </>

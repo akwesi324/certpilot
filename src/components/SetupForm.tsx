@@ -18,7 +18,7 @@ export default function SetupForm({
   current: { examId: string; examDate: string; institution: string };
 }) {
   const [state, action, pending] = useActionState<FormState, FormData>(saveSetup, undefined);
-  const [examId, setExamId] = useState(current.examId);
+  const [examId, setExamId] = useState(current.examId || "secplus");
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
   const visible = groups
@@ -28,11 +28,12 @@ export default function SetupForm({
     }))
     .filter((g) => g.exams.length > 0);
   // The group holding the saved exam starts open (or the first group if none is saved yet).
-  const initialGroup = groups.find((g) => g.exams.some((e) => e.id === current.examId))?.vendor ?? groups[0]?.vendor;
+  const initialGroup = groups.find((g) => g.exams.some((e) => e.id === (current.examId || "secplus")))?.vendor ?? groups[0]?.vendor;
   const selected = groups.flatMap((g) => g.exams.map((e) => ({ ...e, vendor: g.vendor }))).find((e) => e.id === examId);
 
   return (
     <form action={action} className="space-y-6">
+      <input type="hidden" name="examId" value={examId} />
       <fieldset className="space-y-3">
         <legend className="mb-2 flex w-full flex-wrap items-center justify-between gap-2">
           <span className="text-lg font-semibold text-slate-900 dark:text-white">{category}</span>
@@ -69,9 +70,10 @@ export default function SetupForm({
               {g.exams.map((e) => (
                 <label
                   key={e.id}
+                  onClick={() => setExamId(e.id)}
                   className={`${card} cursor-pointer transition ${examId === e.id ? "border-indigo-500 ring-2 ring-indigo-500/30 dark:border-indigo-400" : "hover:border-slate-300 dark:hover:border-slate-700"}`}
                 >
-                  <input type="radio" name="examId" value={e.id} checked={examId === e.id} onChange={() => setExamId(e.id)} className="sr-only" />
+                  <input type="radio" name="examIdRadio" value={e.id} checked={examId === e.id} onChange={() => setExamId(e.id)} className="sr-only" />
                   <span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{e.code}</span>
                   <span className="mt-1 block font-semibold text-slate-900 dark:text-white">{e.name}</span>
                   <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">
@@ -83,8 +85,6 @@ export default function SetupForm({
           </details>
         ))}
       </fieldset>
-      {/* Keeps the choice submitted even when its group is filtered out by the search. */}
-      {examId && !visible.some((g) => g.exams.some((e) => e.id === examId)) && <input type="hidden" name="examId" value={examId} />}
       <div className={`${card} grid gap-4 sm:grid-cols-2`}>
         <label className="block space-y-1">
           <span className={label}>Exam date (optional)</span>
