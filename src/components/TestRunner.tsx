@@ -142,16 +142,16 @@ export default function TestRunner({ attemptId, examName, mode, expiresAt, serve
       return `${base} border-slate-200 opacity-80 dark:border-slate-800`;
     }
     return c === shown
-      ? `${base} border-indigo-500 bg-indigo-50 ring-2 ring-indigo-500/20 dark:bg-indigo-500/10`
+      ? `${base} border-violet-500 bg-violet-50 ring-2 ring-violet-500/20 dark:bg-violet-500/10`
       : `${base} border-slate-200 hover:border-slate-400 dark:border-slate-800 dark:hover:border-slate-600`;
   };
 
   const navClass = useMemo(() => (i: RunnerItem, idx: number) => {
     let c = "relative h-9 w-9 rounded-lg border text-xs font-semibold tabular-nums transition ";
     if (!simulation && i.answer !== undefined) c += i.isCorrect ? "border-emerald-500 bg-emerald-500 text-white " : "border-rose-500 bg-rose-500 text-white ";
-    else if (i.selected) c += "border-indigo-500 bg-indigo-500 text-white ";
+    else if (i.selected) c += "border-violet-500 bg-gradient-to-br from-purple-600 via-violet-500 to-indigo-400 text-white ";
     else c += "border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300 ";
-    if (idx === current) c += "ring-2 ring-offset-2 ring-indigo-500 dark:ring-offset-slate-950 ";
+    if (idx === current) c += "ring-2 ring-offset-2 ring-violet-500 dark:ring-offset-slate-950 ";
     return c;
   }, [current, simulation]);
 
@@ -204,7 +204,7 @@ export default function TestRunner({ attemptId, examName, mode, expiresAt, serve
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${examLabel} ${item.topic}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 inline-block font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+                className="mt-3 inline-block font-semibold text-violet-600 hover:underline dark:text-violet-400"
               >
                 Watch a lesson: {item.topic} &rarr;
               </a>

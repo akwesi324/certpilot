@@ -9,22 +9,22 @@ export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
       <defs>
         {/* Base Squircle cyber gradient */}
         <linearGradient id="cp-mark-bg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#4338CA" />
-          <stop offset="50%" stopColor="#312E81" />
-          <stop offset="100%" stopColor="#1E1B4B" />
+          <stop offset="0%" stopColor="#7C3AED" />
+          <stop offset="50%" stopColor="#5B21B6" />
+          <stop offset="100%" stopColor="#2E1065" />
         </linearGradient>
 
         {/* Shield contour gradient */}
         <linearGradient id="cp-mark-shield" x1="7.5" y1="5.5" x2="24.5" y2="26.5" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#38BDF8" />
-          <stop offset="50%" stopColor="#818CF8" />
-          <stop offset="100%" stopColor="#6366F1" />
+          <stop offset="0%" stopColor="#C4B5FD" />
+          <stop offset="50%" stopColor="#A78BFA" />
+          <stop offset="100%" stopColor="#818CF8" />
         </linearGradient>
 
         {/* Dynamic ascent checkmark gradient */}
         <linearGradient id="cp-mark-check" x1="11" y1="21.8" x2="22" y2="13.2" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#06B6D4" />
-          <stop offset="100%" stopColor="#38BDF8" />
+          <stop offset="0%" stopColor="#E9D5FF" />
+          <stop offset="100%" stopColor="#C4B5FD" />
         </linearGradient>
       </defs>
 
@@ -65,7 +65,7 @@ export default function Logo() {
     <span className="inline-flex items-center gap-2.5">
       <LogoMark />
       <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-        Cert<span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-cyan-300 dark:to-cyan-400">Pilot</span>
+        Cert<span className="bg-gradient-to-r from-purple-600 via-violet-500 to-indigo-400 bg-clip-text text-transparent dark:from-purple-300 dark:via-violet-300 dark:to-indigo-300">Pilot</span>
       </span>
     </span>
   );

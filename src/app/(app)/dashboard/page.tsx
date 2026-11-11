@@ -38,7 +38,7 @@ export default async function DashboardPage() {
           </h1>
           {user.institution && <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">Studying with {user.institution}</p>}
         </div>
-        <Link href="/setup" className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400">Change exam</Link>
+        <Link href="/setup" className="text-sm font-semibold text-violet-600 hover:underline dark:text-violet-400">Change exam</Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
       <section className={card}>
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-slate-900 dark:text-white">Recent tests</h2>
-          <Link href="/history" className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400">All history</Link>
+          <Link href="/history" className="text-sm font-semibold text-violet-600 hover:underline dark:text-violet-400">All history</Link>
         </div>
         {recent.length ? (
           <ul className="mt-3 divide-y divide-slate-100 dark:divide-slate-800">
@@ -93,7 +93,7 @@ export default async function DashboardPage() {
                   <span className="text-slate-500 dark:text-slate-400"> &middot; {a.questionCount} questions &middot; {a.startedAt.toLocaleDateString("en-GB")}</span>
                 </span>
                 {a.status === "IN_PROGRESS" ? (
-                  <Link href={`/test/${a.id}`} className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400">Resume</Link>
+                  <Link href={`/test/${a.id}`} className="font-semibold text-violet-600 hover:underline dark:text-violet-400">Resume</Link>
                 ) : (
                   <Link href={`/test/${a.id}/results`} className={`font-semibold tabular-nums ${a.passed ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
                     {a.scorePercent}% {a.passed ? "pass" : "below 80%"}

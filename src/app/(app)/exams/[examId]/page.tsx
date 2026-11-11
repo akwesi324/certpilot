@@ -20,7 +20,7 @@ export default async function ExamPage({ params }: PageProps<"/exams/[examId]">)
           {exam.vendor} {exam.code} &middot; {exam.format.questions} questions in {exam.format.minutes} minutes &middot; official passing score{" "}
           {exam.officialPassing} &middot; CertPilot pass mark {PASS_MARK}%
         </p>
-        <a href={exam.objectivesUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400">
+        <a href={exam.objectivesUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-sm font-semibold text-violet-600 hover:underline dark:text-violet-400">
           Official exam page &rarr;
         </a>
       </div>

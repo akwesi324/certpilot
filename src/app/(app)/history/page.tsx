@@ -41,7 +41,7 @@ export default async function HistoryPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link href={a.status === "IN_PROGRESS" ? `/test/${a.id}` : `/test/${a.id}/results`} className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400">
+                    <Link href={a.status === "IN_PROGRESS" ? `/test/${a.id}` : `/test/${a.id}/results`} className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
                       {a.status === "IN_PROGRESS" ? "Resume" : "Review"}
                     </Link>
                   </td>

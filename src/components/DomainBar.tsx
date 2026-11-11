@@ -30,7 +30,7 @@ export default function DomainBar({
             target="_blank"
             rel="noopener noreferrer"
             title="Watch lessons for this domain"
-            className="font-medium text-slate-800 hover:text-indigo-600 hover:underline dark:text-slate-200 dark:hover:text-indigo-400"
+            className="font-medium text-slate-800 hover:text-violet-600 hover:underline dark:text-slate-200 dark:hover:text-violet-400"
           >
             {name} <span aria-hidden="true">&#9655;</span>
           </a>

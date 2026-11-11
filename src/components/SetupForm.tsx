@@ -71,10 +71,10 @@ export default function SetupForm({
                 <label
                   key={e.id}
                   onClick={() => setExamId(e.id)}
-                  className={`${card} cursor-pointer transition ${examId === e.id ? "border-indigo-500 ring-2 ring-indigo-500/30 dark:border-indigo-400" : "hover:border-slate-300 dark:hover:border-slate-700"}`}
+                  className={`${card} cursor-pointer transition ${examId === e.id ? "border-violet-500 ring-2 ring-violet-500/30 dark:border-violet-400" : "hover:border-slate-300 dark:hover:border-slate-700"}`}
                 >
                   <input type="radio" name="examIdRadio" value={e.id} checked={examId === e.id} onChange={() => setExamId(e.id)} className="sr-only" />
-                  <span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{e.code}</span>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-violet-600 dark:text-violet-400">{e.code}</span>
                   <span className="mt-1 block font-semibold text-slate-900 dark:text-white">{e.name}</span>
                   <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">
                     {e.questions} questions &middot; {e.minutes} min

@@ -76,7 +76,7 @@ export default async function ResultsPage({ params }: PageProps<"/test/[id]/resu
                 <ul className="mt-1 space-y-0.5 text-sm">
                   {domainVideos(exam, domain, institution).map((v) => (
                     <li key={v.url}>
-                      <a href={v.url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline dark:text-indigo-400">{v.title}</a>
+                      <a href={v.url} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline dark:text-violet-400">{v.title}</a>
                       <span className="text-slate-400"> &middot; {v.source}</span>
                     </li>
                   ))}

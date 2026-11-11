@@ -23,7 +23,7 @@ export default function NavLinks({ admin = false }: { admin?: boolean }) {
             aria-current={active ? "page" : undefined}
             className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition ${
               active
-                ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300"
+                ? "bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"
                 : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
             }`}
           >

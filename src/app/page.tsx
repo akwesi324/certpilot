@@ -27,7 +27,7 @@ export default async function Home() {
         className="pointer-events-none absolute -top-40 left-1/2 -z-10 -translate-x-1/2 transform-gpu overflow-hidden blur-3xl"
       >
         <div
-          className="h-[44rem] w-[70rem] bg-gradient-to-tr from-indigo-500/25 via-blue-500/20 to-cyan-400/25 opacity-70 dark:opacity-40"
+          className="h-[44rem] w-[70rem] bg-gradient-to-tr from-purple-500/25 via-violet-500/20 to-indigo-400/25 opacity-70 dark:opacity-40"
           style={{
             clipPath:
               "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
@@ -46,7 +46,7 @@ export default async function Home() {
       <main className="mx-auto w-full max-w-6xl flex-1 px-4">
         <section className="py-14 text-center sm:py-20">
           <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-800 bg-clip-text text-transparent dark:from-white dark:via-slate-100 dark:to-indigo-300">
+            <span className="bg-gradient-to-r from-slate-900 via-violet-950 to-violet-800 bg-clip-text text-transparent dark:from-white dark:via-slate-100 dark:to-violet-300">
               Your study partner for cybersecurity certifications
             </span>
           </h1>

@@ -30,7 +30,7 @@ export default async function ExamsPage() {
             <a
               key={vendor.name}
               href={`#${anchor(vendor.name)}`}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700 hover:border-indigo-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700 hover:border-violet-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
             >
               {vendor.name} <span className="text-slate-400">{exams.length}</span>
             </a>
@@ -52,8 +52,8 @@ export default async function ExamsPage() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {exams.map((e) => (
-                <Link key={e.id} href={`/exams/${e.id}`} className={`${card} transition hover:border-indigo-400`}>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{e.code}</span>
+                <Link key={e.id} href={`/exams/${e.id}`} className={`${card} transition hover:border-violet-400`}>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-violet-600 dark:text-violet-400">{e.code}</span>
                   <h4 className="mt-1 font-semibold text-slate-900 dark:text-white">{e.name}</h4>
                   <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
                     {e.format.questions} questions &middot; {e.format.minutes} min &middot; {e.domains.length} domains

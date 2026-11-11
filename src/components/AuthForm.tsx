@@ -36,7 +36,7 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
       </button>
       <p className="text-center text-sm text-slate-500 dark:text-slate-400">
         {isLogin ? "New here? " : "Already have an account? "}
-        <Link href={isLogin ? "/register" : "/login"} className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400">
+        <Link href={isLogin ? "/register" : "/login"} className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
           {isLogin ? "Create an account" : "Sign in"}
         </Link>
       </p>
