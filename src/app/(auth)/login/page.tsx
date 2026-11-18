@@ -2,6 +2,8 @@ import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
 import Footer from "@/components/Footer";
 import Logo from "@/components/Logo";
+import DemoLogin from "@/components/DemoLogin";
+import { demoAccounts } from "@/lib/demo";
 
 export default function LoginPage() {
   return (
@@ -10,7 +12,10 @@ export default function LoginPage() {
         <Link href="/" aria-label="CertPilot home">
           <Logo />
         </Link>
-        <AuthForm mode="login" />
+        <div className="w-full max-w-sm space-y-3">
+          <AuthForm mode="login" />
+          <DemoLogin accounts={demoAccounts()} />
+        </div>
       </main>
       <Footer />
     </div>
